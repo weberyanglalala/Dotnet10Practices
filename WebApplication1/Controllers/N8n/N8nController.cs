@@ -28,38 +28,47 @@ public class N8NController : ControllerBase
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", "");
 
-        // set up request content
-        var jsonContent = JsonSerializer.Serialize(request);
-        
-        var response = await client.PostAsJsonAsync(
-            endpoint,
-            jsonContent
-        );
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            _logger.LogError("n8n error: {Status}, Reason: {Reason}, Content: {Content}", 
-                response.StatusCode, 
-                response.ReasonPhrase, 
-                errorContent);
-            return StatusCode((int)response.StatusCode, "呼叫 n8n 失敗");
+            // set up request content
+            var jsonContent = JsonSerializer.Serialize(request);
+            
+            var response = await client.PostAsJsonAsync(
+                endpoint,
+                jsonContent
+            );
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("n8n error: {Status}, Reason: {Reason}, Content: {Content}", 
+                    response.StatusCode, 
+                    response.ReasonPhrase, 
+                    errorContent);
+                return StatusCode((int)response.StatusCode, "呼叫 n8n 失敗");
+            }
+
+            var data = await response.Content
+                .ReadFromJsonAsync<CreateProductResponse>();
+
+            if (data == null)
+            {
+                return Problem("n8n 回傳格式錯誤");
+                
+            }
+
+            return Ok(new ApiResponse<CreateProductResponse>
+            {
+                Data = data,
+                Code = 200,
+                Message = "取得商品資料成功"
+            });
         }
-
-        var data = await response.Content
-            .ReadFromJsonAsync<CreateProductResponse>();
-
-        if (data == null)
+        catch (Exception ex)
         {
-            return Problem("n8n 回傳格式錯誤");
+            _logger.LogError(ex, "發生未預期的錯誤");
+            return StatusCode(500, "發生未預期的錯誤");
         }
-
-        return Ok(new ApiResponse<CreateProductResponse>
-        {
-            Data = data,
-            Code = 200,
-            Message = "取得商品資料成功"
-        });
     }
 }
 
