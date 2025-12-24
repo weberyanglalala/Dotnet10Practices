@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="app">
+    <div class="pt-5">
+        <div
+            class="flex flex-col w-full md:w-1/2 xl:w-2/5 2xl:w-2/5 3xl:w-1/3 mx-auto p-8 md:p-10 2xl:p-12 3xl:p-14 bg-[#ffffff] rounded-2xl shadow-xl">
+            <div class="flex flex-row gap-3 pb-4">
+                <h1 class="text-3xl font-bold text-[#4B5563] text-[#4B5563] my-auto">新增一個產品</h1>
+            </div>
+            <div class="flex flex-col">
+                <div class="pb-2">
+                    <label for="product-title" class="block mb-2 text-sm font-medium text-[#111827]">產品標題</label>
+                    <input v-model="productTitle" type="text" name="product-title" id="product-title" aria-describedby="product-title-error"
+                           class="mb-1 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                           placeholder="Enter product title" autocomplete="off">
+                    <p v-if="errorMessage" id="product-title-error" class="text-red-600 text-sm mt-1">{{ errorMessage }}</p>
+                </div>
+                <button
+                    class="w-full text-[#FFFFFF] bg-[#10B981] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                    :disabled="!createProductButtonStatus"
+                    v-on:click="createProductViaN8n">
+                    AI 後台建立產品
+                </button>
+                <div class="mt-4">
+                    <h2 class="text-lg font-semibold mb-4 text-[#111827]">建立的產品</h2>
+                    <div class="pb-2">
+                        <label for="product-brand" class="block mb-2 text-sm font-medium text-[#111827]">品牌</label>
+                        <input v-model="brand" type="text" name="product-brand" id="product-brand"
+                               class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                               placeholder="">
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-name" class="block mb-2 text-sm font-medium text-[#111827]">名稱</label>
+                        <input v-model="name" type="text" name="product-name" id="product-name"
+                               class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                               placeholder="">
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-category" class="block mb-2 text-sm font-medium text-[#111827]">類別</label>
+                        <input v-model="category" type="text" name="product-category"
+                               id="product-category"
+                               class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                               placeholder="">
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-description" class="block mb-2 text-sm font-medium text-[#111827]">描述</label>
+                        <textarea v-model="description" name="product-description" id="product-description"
+                                  class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                                  placeholder="" rows="3"></textarea>
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-region" class="block mb-2 text-sm font-medium text-[#111827]">地區</label>
+                        <input v-model="region" type="text" name="product-region" id="product-region"
+                               class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                               placeholder="">
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-price" class="block mb-2 text-sm font-medium text-[#111827]">價格</label>
+                        <div class="flex gap-2">
+                            <input v-model="price" type="text" name="product-price" id="product-price"
+                                   class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                                   placeholder="">
+                            <input v-model="currency" type="text" name="product-currency"
+                                   id="product-currency"
+                                   class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-32 p-2.5 py-3 px-4"
+                                   placeholder="">
+                        </div>
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-start"
+                               class="block mb-2 text-sm font-medium text-[#111827]">開始時間</label>
+                        <input v-model="startUtc" type="text" name="product-start" id="product-start"
+                               class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                               placeholder="">
+                    </div>
+                    <div class="pb-2">
+                        <label for="product-end" class="block mb-2 text-sm font-medium text-[#111827]">結束時間</label>
+                        <input v-model="endUtc" type="text" name="product-end" id="product-end"
+                               class="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 py-3 px-4"
+                               placeholder="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="isLoading"
+         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+            <p class="text-gray-700 text-lg font-semibold">Loading...</p>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="~/js/home/index.js" asp-append-version="true"></script>
+}
