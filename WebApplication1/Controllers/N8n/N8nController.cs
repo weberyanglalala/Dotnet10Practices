@@ -1,6 +1,4 @@
-using System.Net;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,13 +28,7 @@ public class N8NController : ControllerBase
 
         try
         {
-            // set up request content
-            var jsonContent = JsonSerializer.Serialize(request);
-            
-            var response = await client.PostAsJsonAsync(
-                endpoint,
-                jsonContent
-            );
+            var response = await client.PostAsJsonAsync(endpoint, request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -48,13 +40,19 @@ public class N8NController : ControllerBase
                 return StatusCode((int)response.StatusCode, "呼叫 n8n 失敗");
             }
 
-            var data = await response.Content
-                .ReadFromJsonAsync<CreateProductResponse>();
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrWhiteSpace(responseContent))
+            {
+                _logger.LogWarning("n8n 回傳空的回應內容");
+                return Problem("n8n 回傳空的回應內容");
+            }
+
+            var data = JsonSerializer.Deserialize<CreateProductResponse>(responseContent);
 
             if (data == null)
             {
                 return Problem("n8n 回傳格式錯誤");
-                
             }
 
             return Ok(new ApiResponse<CreateProductResponse>
