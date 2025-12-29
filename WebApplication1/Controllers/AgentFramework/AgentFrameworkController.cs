@@ -15,8 +15,8 @@ public class TravelItinerary
     public string Category { get; set; }
     public string Description { get; set; }
     public string Region { get; set; }
-    public string StartUtc { get; set; }
-    public string EndUtc { get; set; }
+    public DateTime StartUtc { get; set; }
+    public DateTime EndUtc { get; set; }
     public int Price { get; set; }
     public string Currency { get; set; }
 }
@@ -25,6 +25,13 @@ public class TravelItinerary
 [Route("api/[controller]/[action]")]
 public class AgentFrameworkController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
+
+    public AgentFrameworkController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
@@ -39,7 +46,7 @@ public class AgentFrameworkController : ControllerBase
             )
         };
 
-        var client = new OpenAIClient("").GetChatClient("gpt-4.1-mini");
+        var client = new OpenAIClient(_configuration["OpenAiApiKey"]).GetChatClient("gpt-4.1");
 
         var chatClient = client.AsIChatClient();
 
@@ -57,13 +64,13 @@ public class AgentFrameworkController : ControllerBase
         var createResponse = new CreateProductResponse
         {
             IsSuccess = true,
-            Brand = itinerary.Brand,
-            Name = itinerary.Name,
-            Category = itinerary.Category,
-            Description = itinerary.Description,
-            Region = itinerary.Region,
-            StartUtc = DateTime.Parse(itinerary.StartUtc),
-            EndUtc = DateTime.Parse(itinerary.EndUtc),
+            Brand = itinerary.Brand ?? "無品牌名稱",
+            Name = itinerary.Name ?? "無產品名稱",
+            Category = itinerary.Category ?? "無分類名稱",
+            Description = itinerary.Description ?? "無敘述",
+            Region = itinerary.Region ?? "無地區",
+            StartUtc = itinerary.StartUtc,
+            EndUtc = itinerary.EndUtc,
             Price = (decimal)itinerary.Price,
             Currency = itinerary.Currency
         };

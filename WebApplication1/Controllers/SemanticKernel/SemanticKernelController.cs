@@ -11,11 +11,18 @@ namespace WebApplication1.Controllers.SemanticKernel;
 [Route("api/[controller]/[action]")]
 public class SemanticKernelController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
+
+    public SemanticKernelController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
         var kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion("gpt-4o-mini", "")
+            .AddOpenAIChatCompletion("gpt-4.1", _configuration["OpenAiApiKey"])
             .Build();
 
         var executionSettings = new OpenAIPromptExecutionSettings
@@ -30,13 +37,13 @@ public class SemanticKernelController : ControllerBase
         var response = new CreateProductResponse
         {
             IsSuccess = true,
-            Brand = itinerary.Brand,
-            Name = itinerary.Name,
-            Category = itinerary.Category,
-            Description = itinerary.Description,
-            Region = itinerary.Region,
-            StartUtc = DateTime.Parse(itinerary.StartUtc),
-            EndUtc = DateTime.Parse(itinerary.EndUtc),
+            Brand = itinerary.Brand ?? "無品牌名稱",
+            Name = itinerary.Name ?? "無產品名稱",
+            Category = itinerary.Category ?? "無分類名稱",
+            Description = itinerary.Description ?? "無敘述",
+            Region = itinerary.Region ?? "無地區",
+            StartUtc = itinerary.StartUtc,
+            EndUtc = itinerary.EndUtc,
             Price = (decimal)itinerary.Price,
             Currency = itinerary.Currency
         };
@@ -52,13 +59,13 @@ public class SemanticKernelController : ControllerBase
 
 public class TravelItinerary
 {
-    public string Brand { get; set; }
-    public string Name { get; set; }
-    public string Category { get; set; }
-    public string Description { get; set; }
-    public string Region { get; set; }
-    public string StartUtc { get; set; }
-    public string EndUtc { get; set; }
-    public int Price { get; set; }
-    public string Currency { get; set; }
+    public required string Brand { get; set; }
+    public required string Name { get; set; }
+    public required string Category { get; set; }
+    public required string Description { get; set; }
+    public required string Region { get; set; }
+    public required DateTime StartUtc { get; set; }
+    public required DateTime EndUtc { get; set; }
+    public required int Price { get; set; }
+    public required string Currency { get; set; }
 }

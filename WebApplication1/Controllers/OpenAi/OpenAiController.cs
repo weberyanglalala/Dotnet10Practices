@@ -10,12 +10,19 @@ namespace WebApplication1.Controllers.OpenAi;
 [Route("api/[controller]/[action]")]
 public class OpenAiController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
+
+    public OpenAiController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
         ChatClient client = new(
-            "gpt-4o-mini",
-            ""
+            "gpt-4.1",
+            _configuration["OpenAiApiKey"]
         );
 
         List<ChatMessage> messages =
