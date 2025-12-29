@@ -22,44 +22,24 @@ public class SemanticKernelController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
-        // https://devblogs.microsoft.com/semantic-kernel/using-json-schema-for-structured-output-in-net-for-openai-models/
         // Initialize kernel.
         Kernel kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion("gpt-4.1", _configuration["OpenAiApiKey"])
             .Build();
 
-        // Initialize ChatResponseFormat object with JSON schema of desired response format.
-        ChatResponseFormat chatResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
-            jsonSchemaFormatName: "travel_itinerary",
-            jsonSchema: BinaryData.FromString("""
-                {
-                    "type": "object",
-                    "properties": {
-                        "Brand": { "type": "string" },
-                        "Name": { "type": "string" },
-                        "Category": { "type": "string" },
-                        "Description": { "type": "string" },
-                        "Region": { "type": "string" },
-                        "StartUtc": { "type": "string", "format": "date-time" },
-                        "EndUtc": { "type": "string", "format": "date-time" },
-                        "Price": { "type": "integer" },
-                        "Currency": { "type": "string" }
-                    },
-                    "required": ["Brand", "Name", "Category", "Description", "Region", "StartUtc", "EndUtc", "Price", "Currency"],
-                    "additionalProperties": false
-                }
-                """),
-            jsonSchemaIsStrict: true);
+        // Import plugin
+        kernel.ImportPluginFromType<TravelItineraryPlugin>();
 
-        // Specify response format by setting ChatResponseFormat object in prompt execution settings.
         var executionSettings = new OpenAIPromptExecutionSettings
         {
-            ResponseFormat = chatResponseFormat
+            ResponseFormat = typeof(TravelItinerary), // Specify response format
+            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() // Enable automatic function calling
         };
 
         // Send a request and pass prompt execution settings with desired response format.
-        var result = await kernel.InvokePromptAsync($"你是行銷小編請輸出行程物件\n{request.ProductTitle}，產生相對應的旅遊產品資訊，品牌名稱等，所有資訊為必填", new KernelArguments(executionSettings));
+        var result = await kernel.InvokePromptAsync($"使用旅遊資料為 {request.ProductTitle} 生成旅遊行程", new(executionSettings));
 
+        // Deserialize string response to a strong type to access type properties.
         var itinerary = JsonSerializer.Deserialize<TravelItinerary>(result.ToString());
 
         var response = new CreateProductResponse
@@ -96,4 +76,19 @@ public class TravelItinerary
     public required DateTime EndUtc { get; set; }
     public required int Price { get; set; }
     public required string Currency { get; set; }
+}
+
+// Define plugin
+public sealed class TravelItineraryPlugin
+{
+    [KernelFunction]
+    public List<string> GetTravelData()
+    {
+        return new List<string>
+        {
+            "熱門旅遊目的地包括巴黎、東京和紐約。",
+            "常見活動包括觀光、購物和用餐。",
+            "旅遊產品通常包括旅遊團、酒店和航班。"
+        };
+    }
 }
