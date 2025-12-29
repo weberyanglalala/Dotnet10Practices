@@ -11,68 +11,41 @@ namespace WebApplication1.Controllers.N8n;
 public class N8NController : ControllerBase
 {
     private readonly ILogger<N8NController> _logger;
-    public N8NController(ILogger<N8NController> logger)
+    private readonly IConfiguration _configuration;
+    public N8NController(ILogger<N8NController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
+        // create a httpclient
         var client = new HttpClient();
         // set up request endpoint
-        var endpoint = "";
-
+        var endpoint = _configuration["N8nWebhookEndpoint"];
         // setup headers
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", "");
-
-        try
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["N8nApiKey"]);
+        // send json to the endpoint using http method post 
+        var response = await client.PostAsJsonAsync(endpoint, request);
+        // get response content
+        var responseString = await response.Content.ReadAsStringAsync();
+        // deserialize CreateProductResponse
+        var result = JsonSerializer.Deserialize<CreateProductResponse>(responseString);
+        // return Ok(result);
+        return Ok(new ApiResponse<CreateProductResponse>
         {
-            var response = await client.PostAsJsonAsync(endpoint, request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                _logger.LogError("n8n error: {Status}, Reason: {Reason}, Content: {Content}", 
-                    response.StatusCode, 
-                    response.ReasonPhrase, 
-                    errorContent);
-                return StatusCode((int)response.StatusCode, "呼叫 n8n 失敗");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            if (string.IsNullOrWhiteSpace(responseContent))
-            {
-                _logger.LogWarning("n8n 回傳空的回應內容");
-                return Problem("n8n 回傳空的回應內容");
-            }
-
-            var data = JsonSerializer.Deserialize<CreateProductResponse>(responseContent);
-
-            if (data == null)
-            {
-                return Problem("n8n 回傳格式錯誤");
-            }
-
-            return Ok(new ApiResponse<CreateProductResponse>
-            {
-                Data = data,
-                Code = 200,
-                Message = "取得商品資料成功"
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "發生未預期的錯誤");
-            return StatusCode(500, "發生未預期的錯誤");
-        }
+            Data = result,
+            Code = 200,
+            Message = "取得商品資料成功"
+        });
     }
 }
 
 public class CreateProductRequest
 {
-    [JsonPropertyName("productTitle")] public string ProductTitle { get; set; }
+    [JsonPropertyName("productTitle")]
+    public string ProductTitle { get; set; }
 }
 
 public class CreateProductResponse
