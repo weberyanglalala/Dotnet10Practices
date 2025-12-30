@@ -1,5 +1,5 @@
 using FluentValidation;
-using WebApplication1.Controllers.N8n;
+using WebApplication1.Models;
 
 namespace WebApplication1.Validators;
 /// <summary>

@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1.Controllers.N8n;
+using WebApplication1.Models;
 using WebApplication1.Services;
 using WebApplication1.Validators;
 
