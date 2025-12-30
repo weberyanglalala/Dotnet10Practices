@@ -3,8 +3,8 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using OpenAI.Chat;
 using System.Text.Json;
-using WebApplication1.Controllers.N8n;
 using WebApplication1.Common;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.SemanticKernel;
 
@@ -63,32 +63,19 @@ public class SemanticKernelController : ControllerBase
             Message = "成功"
         });
     }
-}
 
-public class TravelItinerary
-{
-    public required string Brand { get; set; }
-    public required string Name { get; set; }
-    public required string Category { get; set; }
-    public required string Description { get; set; }
-    public required string Region { get; set; }
-    public required DateTime StartUtc { get; set; }
-    public required DateTime EndUtc { get; set; }
-    public required int Price { get; set; }
-    public required string Currency { get; set; }
-}
-
-// Define plugin
-public sealed class TravelItineraryPlugin
-{
-    [KernelFunction]
-    public List<string> GetTravelData()
+    // Define plugin
+    public sealed class TravelItineraryPlugin
     {
-        return new List<string>
+        [KernelFunction]
+        public List<string> GetTravelData()
         {
-            "熱門旅遊目的地包括巴黎、東京和紐約。",
-            "常見活動包括觀光、購物和用餐。",
-            "旅遊產品通常包括旅遊團、酒店和航班。"
-        };
+            return new List<string>
+            {
+                "熱門旅遊目的地包括巴黎、東京和紐約。",
+                "常見活動包括觀光、購物和用餐。",
+                "旅遊產品通常包括旅遊團、酒店和航班。"
+            };
+        }
     }
 }

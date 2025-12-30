@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using OpenAI.Chat;
 using System.Text.Json;
-using WebApplication1.Controllers.N8n;
 using WebApplication1.Common;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.OpenAi;
 

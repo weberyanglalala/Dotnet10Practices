@@ -3,23 +3,10 @@ using OpenAI;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 using System.Text.Json;
-using WebApplication1.Controllers.N8n;
 using WebApplication1.Common;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.AgentFramework;
-
-public class TravelItinerary
-{
-    public string Brand { get; set; }
-    public string Name { get; set; }
-    public string Category { get; set; }
-    public string Description { get; set; }
-    public string Region { get; set; }
-    public DateTime StartUtc { get; set; }
-    public DateTime EndUtc { get; set; }
-    public int Price { get; set; }
-    public string Currency { get; set; }
-}
 
 [ApiController]
 [Route("api/[controller]/[action]")]

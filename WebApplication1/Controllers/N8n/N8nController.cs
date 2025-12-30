@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Common;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.N8n;
 
@@ -40,24 +41,4 @@ public class N8NController : ControllerBase
             Message = "取得商品資料成功"
         });
     }
-}
-
-public class CreateProductRequest
-{
-    [JsonPropertyName("productTitle")]
-    public string ProductTitle { get; set; }
-}
-
-public class CreateProductResponse
-{
-    [JsonPropertyName("isSuccess")] public bool IsSuccess { get; set; }
-    [JsonPropertyName("brand")] public string Brand { get; set; }
-    [JsonPropertyName("name")] public string Name { get; set; }
-    [JsonPropertyName("category")] public string Category { get; set; }
-    [JsonPropertyName("description")] public string Description { get; set; }
-    [JsonPropertyName("region")] public string Region { get; set; }
-    [JsonPropertyName("startUtc")] public DateTime StartUtc { get; set; }
-    [JsonPropertyName("endUtc")] public DateTime EndUtc { get; set; }
-    [JsonPropertyName("price")] public decimal Price { get; set; }
-    [JsonPropertyName("currency")] public string Currency { get; set; }
 }
