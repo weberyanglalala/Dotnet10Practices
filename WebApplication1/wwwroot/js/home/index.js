@@ -28,7 +28,7 @@ createApp({
       // clear previous error
       this.errorMessage = "";
       try {
-        const response = await fetch("/api/SemanticKernel/CreateProduct", {
+        const response = await fetch("/api/OpenAi/CreateProduct", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -9,9 +9,9 @@ namespace WebApplication1.Controllers.OpenAi;
 [Route("api/[controller]/[action]")]
 public class OpenAiController : ControllerBase
 {
-    private readonly IOpenAiService _openAiService;
+    private readonly IProductDetailRecommendationService _openAiService;
 
-    public OpenAiController(IOpenAiService openAiService)
+    public OpenAiController(IProductDetailRecommendationService openAiService)
     {
         _openAiService = openAiService;
     }

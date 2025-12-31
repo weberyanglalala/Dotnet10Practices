@@ -3,7 +3,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Services;
 
-public interface IOpenAiService
+public interface IProductDetailRecommendationService
 {
     Task<OperationResult<CreateProductResponse>> CreateProductAsync(CreateProductRequest request);
 }

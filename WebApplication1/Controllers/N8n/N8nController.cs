@@ -15,10 +15,10 @@ namespace WebApplication1.Controllers.N8n;
 [Route("api/[controller]/[action]")]
 public class N8NController : ControllerBase
 {
-    private readonly IN8nService _n8nService;
+    private readonly IProductDetailRecommendationService _n8nService;
     private readonly IValidator<CreateProductRequest> _createProductRequestValidator;
 
-    public N8NController(IN8nService n8nService, IValidator<CreateProductRequest> createProductRequestValidator)
+    public N8NController(IProductDetailRecommendationService n8nService, IValidator<CreateProductRequest> createProductRequestValidator)
     {
         _n8nService = n8nService;
         _createProductRequestValidator = createProductRequestValidator;

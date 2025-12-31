@@ -5,12 +5,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Services;
 
-public interface IN8nService
-{
-    Task<OperationResult<CreateProductResponse>> CreateProductAsync(CreateProductRequest request);
-}
-
-public class N8nService : IN8nService
+public class N8nService : IProductDetailRecommendationService
 {
     private readonly ILogger<N8nService> _logger;
     private readonly IConfiguration _configuration;

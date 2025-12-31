@@ -10,8 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<IN8nService, N8nService>();
-builder.Services.AddScoped<IOpenAiService, OpenAiService>();
+builder.Services.AddScoped<IProductDetailRecommendationService, OpenAiService>();
 builder.Services.AddScoped<IValidator<CreateProductRequest>, CreateProductRequestValidator>();
 
 var app = builder.Build();

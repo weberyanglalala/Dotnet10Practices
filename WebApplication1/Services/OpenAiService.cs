@@ -5,7 +5,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Services;
 
-public class OpenAiService : IOpenAiService
+public class OpenAiService : IProductDetailRecommendationService
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<OpenAiService> _logger;
