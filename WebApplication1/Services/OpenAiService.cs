@@ -50,7 +50,7 @@ public class OpenAiService : IProductDetailRecommendationService
                     jsonSchemaFormatName: "travel_itinerary",
                     jsonSchema: GetTravelItinerarySchema(),
                     jsonSchemaIsStrict: true
-                )
+                ),
             };
 
             // 5. 呼叫 OpenAI API
