@@ -5,6 +5,11 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Services;
 
+/// <summary>
+/// 代表與 OpenAI 平台整合的服務，用於提供產品相關的推薦和操作。
+/// 實作 <c>IProductDetailRecommendationService</c> 介面。
+/// 參考來源: https://github.com/openai/openai-dotnet/blob/main/examples/Chat/Example06_StructuredOutputsAsync.cs
+/// </summary>
 public class OpenAiService : IProductDetailRecommendationService
 {
     private readonly IConfiguration _configuration;
