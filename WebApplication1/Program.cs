@@ -21,10 +21,11 @@ builder.Services.AddOpenAIChatCompletion(
     modelId: "gpt-4.1",
     apiKey: builder.Configuration["OpenAiApiKey"]
 );
-builder.Services.AddTransient<Kernel>(serviceProvider =>
-{
-    return new Kernel(serviceProvider);
-});
+builder.Services.AddOpenAITextEmbeddingGeneration(
+    modelId: "text-embedding-3-small",
+    apiKey: builder.Configuration["OpenAiApiKey"]
+);
+builder.Services.AddTransient<Kernel>(serviceProvider => { return new Kernel(serviceProvider); });
 
 var app = builder.Build();
 
