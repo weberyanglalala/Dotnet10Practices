@@ -28,7 +28,7 @@ createApp({
       // clear previous error
       this.errorMessage = "";
       try {
-        const response = await fetch("/api/N8N/CreateProduct", {
+        const response = await fetch("/api/SemanticKernel/CreateProductDetail", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
